@@ -35,17 +35,12 @@
     MYSQL_DB=your_database_name
     ```
 
-4. **Run Database Migrations**:
-    Make sure your MySQL server is running and the database specified in `MYSQL_DB` exists.
-    ```bash
-    python -m api.core.data_base
-    ```
 
-5. **Start the FastAPI Application**:
+4**Start the FastAPI Application**:
     ```bash
     uvicorn main:app --host 0.0.0.0 --port 6060 --reload
     ```
 
-6. **Access the API**:
+5**Access the API**:
     Open your browser and go to `http://localhost:6060/docs` to see the automatically generated API documentation.
 
