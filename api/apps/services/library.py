@@ -1,5 +1,7 @@
 import re
 import aiohttp
+from aiohttp import ClientError
+from fastapi import HTTPException
 
 
 def is_valid_isbn(isbn: str) -> bool:
@@ -22,19 +24,28 @@ async def fetch_book_details(isbn: str):
     :return: A dictionary containing book details, or None if the book is not found.
     """
     url = f"https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url) as response:
-            data = await response.json()
-            book_key = f"ISBN:{isbn}"
-            if book_key in data:
-                book_data = data[book_key]
-                # Extract and return the relevant book details
-                return {
-                    "title": book_data.get("title", "No Title"),
-                    "author": ", ".join([author["name"] for author in book_data.get("authors", [])]),
-                    "summary": book_data.get("notes", "No Summary"),
-                    "cover_url": book_data.get("cover", {}).get("large", ""),
-                    "isbn_10": book_data.get("identifiers", {}).get("isbn_10", [None])[0],
-                    "isbn_13": book_data.get("identifiers", {}).get("isbn_13", [None])[0]
-                }
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=url) as response:
+                data = await response.json()
+                book_key = f"ISBN:{isbn}"
+                if book_key in data:
+                    book_data = data[book_key]
+                    # Extract and return the relevant book details
+                    return {
+                        "title": book_data.get("title", "No Title"),
+                        "author": ", ".join([author["name"] for author in book_data.get("authors", [])]),
+                        "summary": book_data.get("notes", "No Summary"),
+                        "cover_url": book_data.get("cover", {}).get("large", ""),
+                        "isbn_10": book_data.get("identifiers", {}).get("isbn_10", [None])[0],
+                        "isbn_13": book_data.get("identifiers", {}).get("isbn_13", [None])[0]
+                    }
+                else:
+                    raise HTTPException(status_code=404, detail="Book details not found in the API response")
+    except ClientError as e:
+        raise HTTPException(status_code=502, detail=f"HTTP error occurred: {e}")
+    except aiohttp.ClientTimeout as e:
+        raise HTTPException(status_code=504, detail=f"Request timed out: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
     return None

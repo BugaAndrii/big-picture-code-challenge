@@ -17,7 +17,7 @@
     ```
 
 2. **Set Up Virtual Environment and Install Dependencies**:
-    Using `requirements.txt`:
+   Using `requirements.txt`:
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
@@ -25,22 +25,22 @@
     ```
 
 3. **Create and Configure the `.env` File**:
-    Create a file named `.env` in the root directory of your project and add the following configuration:
+   Create a file named `.env` in the root directory of your project and add the following configuration:
     ```
-    DB_CONNECTION=mysql+pymysql
-    MYSQL_USER=your_mysql_user
-    MYSQL_PASSWORD=your_mysql_password
-    MYSQL_SERVER=localhost
-    MYSQL_PORT=3306
-    MYSQL_DB=your_database_name
-    ```
-
-
-4**Start the FastAPI Application**:
-    ```bash
-    uvicorn main:app --host 0.0.0.0 --port 6060 --reload
+    DB_CONNECTION=sql_driver
+    SQL_USER=your_sql_user
+    SQL_PASSWORD=sql_password
+    SQL_SERVER=localhost
+    SQL_PORT=3306
+    SQL_DB=your_database_name
     ```
 
-5**Access the API**:
-    Open your browser and go to `http://localhost:6060/docs` to see the automatically generated API documentation.
+
+4. **Start the FastAPI Application**:
+    ```bash 
+   uvicorn main:app --host 0.0.0.0 --port 6060 --reload
+    ```
+
+5. **Access the API**:
+   Open your browser and go to `http://localhost:6060/docs` to see the automatically generated API documentation.
 
